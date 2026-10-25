@@ -26,18 +26,36 @@ const fragmentShader = /* glsl */ `
   uniform vec3 uFront;
   varying float vDepth;
   void main() {
-    vec3 c = mix(uBack, uFront, vDepth) * (0.7 + vDepth * 0.9);
-    gl_FragColor = vec4(c, 0.1 + vDepth * 0.42);
+    vec3 c = mix(uBack, uFront, vDepth) * (0.6 + vDepth * 0.35);
+    gl_FragColor = vec4(c, 0.07 + vDepth * 0.3);
   }
 `;
 
 interface RingSpec {
-  tiltX: number;
-  tiltZ: number;
-  spin: number;
+  /** orientação fixa do plano da órbita */
+  base: THREE.Quaternion;
+  /** giro da elipse dentro do próprio plano */
   angle: number;
+  spin: number;
   squash: number;
 }
+
+const Z_AXIS = new THREE.Vector3(0, 0, 1);
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+const tmpQuat = new THREE.Quaternion();
+
+interface ElectronSpec {
+  ring: number;
+  phase: number;
+  speed: number; // rad/s; o sinal define o sentido
+}
+
+// rastro do elétron: opacidade e escala de cada ponto, da cabeça para a cauda
+const TRAIL = Array.from({ length: 9 }, (_, k) => ({
+  opacity: k === 0 ? 0.7 : 0.3 * (1 - k / 9) ** 2,
+  scale: k === 0 ? 1 : 0.75 - (k / 9) * 0.45,
+}));
+const TRAIL_STEP = 0.012; // rad entre os pontos do rastro
 
 interface GlobeProps {
   interactive: boolean;
@@ -46,25 +64,60 @@ interface GlobeProps {
 
 function Globe({ interactive, animate }: GlobeProps) {
   const root = useRef<THREE.Group>(null);
+  const cage = useRef<THREE.Group>(null);
   const ringRefs = useRef<(THREE.Group | null)[]>([]);
   const boost = useRef(1);
   const { viewport } = useThree();
   const cfg = motionConfig.globe;
 
+  // órbitas ordenadas: planos distribuídos por igual em volta da esfera (espiral de Fibonacci),
+  // todas com o mesmo achatamento, como a gaiola de um átomo, sem ponto onde todas se cruzam
   const rings = useMemo<RingSpec[]>(
     () =>
-      Array.from({ length: cfg.rings }, (_, i) => ({
-        tiltX: (Math.PI / cfg.rings) * i + 0.2,
-        tiltZ: (i % 3) * 0.55 - 0.5,
-        // rad/s (equivale à velocidade por frame da versão em canvas, a 60 fps)
-        spin: (0.0015 + (i % 4) * 0.0006) * 60 * 0.7,
-        angle: i * 0.7,
-        squash: 0.55 + (i % 5) * 0.11,
-      })),
-    [cfg.rings],
+      Array.from({ length: cfg.rings }, (_, i) => {
+        const y = 1 - (i + 0.5) / cfg.rings;
+        const r = Math.sqrt(1 - y * y);
+        const th = i * GOLDEN_ANGLE;
+        const normal = new THREE.Vector3(Math.cos(th) * r, y, Math.sin(th) * r);
+        return {
+          base: new THREE.Quaternion().setFromUnitVectors(Z_AXIS, normal),
+          angle: (Math.PI * i) / cfg.rings,
+          spin: cfg.ringSpin * (i % 2 ? -1 : 1),
+          squash: cfg.ringSquash,
+        };
+      }),
+    [cfg.rings, cfg.ringSpin, cfg.ringSquash],
   );
 
-  const geometry = useMemo(() => new THREE.TorusGeometry(1, 0.0065, 6, 220), []);
+  // um elétron por anel, defasados para não andarem alinhados
+  const electrons = useMemo<ElectronSpec[]>(
+    () =>
+      rings.map((_, i) => ({
+        ring: i,
+        phase: (Math.PI * 2 * i) / rings.length,
+        speed: cfg.electronSpeed * (i % 2 ? -1 : 1),
+      })),
+    [rings, cfg.electronSpeed],
+  );
+  const electronRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const electronGeometry = useMemo(() => new THREE.SphereGeometry(0.0075, 10, 10), []);
+  const electronMaterials = useMemo(
+    () =>
+      TRAIL.map(
+        (p) =>
+          new THREE.MeshBasicMaterial({
+            color: '#ffffff',
+            transparent: true,
+            opacity: p.opacity,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            toneMapped: false,
+          }),
+      ),
+    [],
+  );
+
+  const geometry = useMemo(() => new THREE.TorusGeometry(1, 0.0022, 6, 260), []);
   const material = useMemo(
     () =>
       new THREE.ShaderMaterial({
@@ -77,8 +130,8 @@ function Globe({ interactive, animate }: GlobeProps) {
         uniforms: {
           uCenterZ: { value: -CAMERA_Z },
           uRadius: { value: 1 },
-          uBack: { value: new THREE.Color('#8266ff') },
-          uFront: { value: new THREE.Color('#4a96ff') },
+          uBack: { value: new THREE.Color('#8f9bb3') },
+          uFront: { value: new THREE.Color('#ffffff') },
         },
       }),
     [],
@@ -120,17 +173,32 @@ function Globe({ interactive, animate }: GlobeProps) {
     g.rotation.x = THREE.MathUtils.damp(g.rotation.x, targetX, cfg.damping, dt);
     g.rotation.y = THREE.MathUtils.damp(g.rotation.y, targetY, cfg.damping, dt);
 
+    // a gaiola inteira gira devagar em Y; cada elipse gira no próprio plano
+    if (cage.current && animate) cage.current.rotation.y += cfg.cageSpin * cfg.idleSpeed * boost.current * dt;
     rings.forEach((r, i) => {
       const ring = ringRefs.current[i];
       if (!ring) return;
       if (animate) r.angle += r.spin * cfg.idleSpeed * boost.current * dt;
-      // ordem ZXY: gira em Y (spin), depois inclina em X e Z, como na projeção original
-      ring.rotation.set(r.tiltX, r.angle, r.tiltZ, 'ZXY');
+      ring.quaternion.copy(r.base).multiply(tmpQuat.setFromAxisAngle(Z_AXIS, r.angle));
+    });
+
+    // elétrons correm sobre a elipse do anel (mesmo achatamento do torus)
+    electrons.forEach((e, ei) => {
+      const squash = rings[e.ring].squash;
+      if (animate) e.phase += e.speed * boost.current * dt;
+      const back = -Math.sign(e.speed);
+      TRAIL.forEach((_, k) => {
+        const m = electronRefs.current[ei * TRAIL.length + k];
+        if (!m) return;
+        const a = e.phase + back * k * TRAIL_STEP;
+        m.position.set(Math.cos(a), Math.sin(a) * squash, 0);
+      });
     });
   });
 
   return (
     <group ref={root} position={[0, centerY, 0]} scale={radius}>
+      <group ref={cage}>
       {rings.map((r, i) => (
         <group
           key={i}
@@ -139,8 +207,24 @@ function Globe({ interactive, animate }: GlobeProps) {
           }}
         >
           <mesh geometry={geometry} material={material} scale={[1, r.squash, 1]} />
+          {electrons.map((e, ei) =>
+            e.ring === i
+              ? TRAIL.map((p, k) => (
+                  <mesh
+                    key={`${ei}-${k}`}
+                    ref={(el) => {
+                      electronRefs.current[ei * TRAIL.length + k] = el;
+                    }}
+                    geometry={electronGeometry}
+                    material={electronMaterials[k]}
+                    scale={p.scale}
+                  />
+                ))
+              : null,
+          )}
         </group>
       ))}
+      </group>
     </group>
   );
 }

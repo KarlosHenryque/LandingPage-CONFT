@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
+import type { MouseEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import { z } from 'zod';
 import { content } from '../../data/content';
 import type { Content } from '../../data/content';
+import { LIMITS, cleanText, isEmail, isSafeText } from '../../lib/contactValidation';
 import { sendContact } from '../../services/contact';
 import { Button } from '../ui/Button';
 import { Eyebrow } from '../ui/Eyebrow';
@@ -13,14 +15,22 @@ import { Reveal } from '../ui/Reveal';
 import { TextField } from '../ui/TextField';
 import styles from './Contact.module.css';
 
+const WHATSAPP_MESSAGE = 'Olá! Vim pelo site da CONFT e gostaria de saber mais sobre os serviços de vocês.';
+
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
 function makeSchema(errors: Content['contact']['form']['errors']) {
+  const text = (max: number) =>
+    z.string().transform(cleanText).pipe(z.string().max(max, errors.tooLong).refine(isSafeText, errors.unsafe));
   return z.object({
-    name: z.string().trim().min(2, errors.name),
-    email: z.string().trim().email(errors.email),
-    company: z.string().trim().optional(),
-    message: z.string().trim().min(10, errors.message),
+    name: text(LIMITS.name).pipe(z.string().min(2, errors.name)),
+    email: z
+      .string()
+      .transform(cleanText)
+      .pipe(z.string().max(LIMITS.email, errors.email).refine(isEmail, errors.email)),
+    company: text(LIMITS.company).optional(),
+    message: text(LIMITS.message).pipe(z.string().min(10, errors.message)),
+    website: z.string().optional(), // honeypot
   });
 }
 type FormValues = z.infer<ReturnType<typeof makeSchema>>;
@@ -39,7 +49,7 @@ export function Contact() {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     mode: 'onTouched', // valida ao sair do campo e, depois disso, a cada tecla
-    defaultValues: { name: '', email: '', company: '', message: '' },
+    defaultValues: { name: '', email: '', company: '', message: '', website: '' },
   });
 
   const onSubmit = async (values: FormValues) => {
@@ -51,6 +61,13 @@ export function Contact() {
     } catch {
       setStatus('error');
     }
+  };
+
+  const focusName = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const input = document.querySelector<HTMLInputElement>('#contato input[name="name"]');
+    input?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input?.focus({ preventScroll: true });
   };
 
   const valid = (name: keyof FormValues) => Boolean(touchedFields[name] && dirtyFields[name]);
@@ -65,7 +82,15 @@ export function Contact() {
           <ul className={styles.info}>
             {contact.info.map((item) => (
               <li key={item.text}>
-                <span aria-hidden="true">{item.icon}</span> {item.text}
+                {item.kind === 'whatsapp' ? (
+                  <a href={`https://wa.me/${item.whatsappNumber}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`} target="_blank" rel="noopener noreferrer">
+                    <span aria-hidden="true">{item.icon}</span> {item.text}
+                  </a>
+                ) : (
+                  <a href="#contato" onClick={focusName}>
+                    <span aria-hidden="true">{item.icon}</span> {item.text}
+                  </a>
+                )}
               </li>
             ))}
           </ul>
@@ -78,6 +103,7 @@ export function Contact() {
               label={f.name.label}
               placeholder={f.name.placeholder}
               autoComplete="name"
+              maxLength={LIMITS.name}
               registration={register('name')}
               error={errors.name?.message}
               valid={valid('name')}
@@ -87,6 +113,7 @@ export function Contact() {
               placeholder={f.email.placeholder}
               type="email"
               autoComplete="email"
+              maxLength={LIMITS.email}
               registration={register('email')}
               error={errors.email?.message}
               valid={valid('email')}
@@ -95,15 +122,28 @@ export function Contact() {
               label={f.company.label}
               placeholder={f.company.placeholder}
               autoComplete="organization"
+              maxLength={LIMITS.company}
               registration={register('company')}
+              error={errors.company?.message}
             />
             <TextField
               multiline
               label={f.message.label}
               placeholder={f.message.placeholder}
+              maxLength={LIMITS.message}
               registration={register('message')}
               error={errors.message?.message}
               valid={valid('message')}
+            />
+
+            {/* honeypot: invisível para pessoas, bots costumam preencher */}
+            <input
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+              {...register('website')}
             />
 
             <MagneticButton className={styles.submit}>

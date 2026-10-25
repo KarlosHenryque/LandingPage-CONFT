@@ -97,7 +97,7 @@ export interface Content {
     eyebrow: string;
     title: string;
     text: string;
-    info: { icon: string; text: string }[];
+    info: { icon: string; text: string; kind: 'email' | 'whatsapp'; whatsappNumber?: string }[];
     note: string;
     emailTo: string;
     emailSubjectPrefix: string;
@@ -111,7 +111,7 @@ export interface Content {
       sending: string;
       success: string;
       error: string;
-      errors: { name: string; email: string; message: string };
+      errors: { name: string; email: string; message: string; tooLong: string; unsafe: string };
     };
   };
   footer: {
@@ -151,10 +151,10 @@ export const content: Content = {
   },
 
   hero: {
-    eyebrow: 'Desenvolve. Entrega. Evolui.',
+    eyebrow: 'Desenvolve Entrega Evolui.',
     titleLines: ['Eleve a eficiência', 'do seu negócio'],
     subtitle:
-      'Criamos aplicações web sob medida que transformam processos cansativos em sistemas simples e eficazes — para pequenas e grandes empresas.',
+      'Criamos aplicações web sob medida que transformam processos cansativos em sistemas simples e eficazes para pequenas e grandes empresas.',
     primaryCta: 'Solicitar proposta',
     secondaryCta: 'Ver soluções',
     globeLabel: 'Globo animado em linhas azuis e roxas',
@@ -183,7 +183,7 @@ export const content: Content = {
     before: 'Acreditamos que a tecnologia deve ',
     highlight: 'simplificar',
     after:
-      ', não complicar. Por isso construímos sistemas web que acabam com planilhas, retrabalho e tarefas repetitivas — e devolvem o tempo da sua equipe para o que importa.',
+      ', não complicar. Por isso construímos sistemas web que acabam com planilhas, retrabalho e tarefas repetitivas e devolvem o tempo da sua equipe para o que importa.',
     signatureBefore: 'Tecnologia que impulsiona ',
     signatureStrong: 'o seu negócio.',
     logoLabel: 'Símbolo da CONFT em 3D, que acompanha o cursor',
@@ -193,8 +193,8 @@ export const content: Content = {
   solutions: {
     eyebrow: 'Soluções',
     titleBefore: 'Transforme processos cansativos em ',
-    titleHighlight: 'fluxos simples',
-    subtitle: 'Desenvolvemos a aplicação certa para o seu cenário: do primeiro painel ao sistema completo.',
+    titleHighlight: 'fluxos simples e automatizados',
+    subtitle: 'Desenvolvemos soluções personalizadas para o seu dia a dia: Do primeiro painel ao sistema completo.',
     cursorLabel: 'Ver',
     custom: {
       title: 'Sistemas web sob medida',
@@ -239,11 +239,11 @@ export const content: Content = {
     steps: [
       {
         title: 'Desenvolve',
-        text: 'Entendemos sua operação, mapeamos os gargalos e desenhamos a solução ideal, simples de usar e fácil de adotar.',
+        text: 'Entendemos sua operação, mapeamos os gargalos e desenhamos a solução ideal para sua empresa.',
       },
       {
         title: 'Entrega',
-        text: 'Colocamos o sistema no ar em ciclos curtos, com treinamento e acompanhamento para sua equipe ganhar autonomia.',
+        text: 'Implantação em ciclos curtos, com treinamento e acompanhamento para sua equipe ganhar autonomia.',
       },
       {
         title: 'Evolui',
@@ -262,7 +262,6 @@ export const content: Content = {
       { value: 100, suffix: '%', label: 'sob medida para sua operação' },
       { value: 24, suffix: '/7', label: 'acesso de qualquer lugar, pelo navegador' },
     ],
-    note: '* Valores ilustrativos — substitua pelos números reais da CONFT.',
   },
 
   faq: {
@@ -272,12 +271,12 @@ export const content: Content = {
       {
         question: 'Para quais empresas a CONFT desenvolve?',
         answer:
-          'Para pequenas e grandes empresas de qualquer segmento que queiram substituir processos manuais, planilhas e ferramentas desconectadas por um sistema web simples e eficaz.',
+          'Para pequenas e grandes empresas de qualquer segmento que queiram substituir processos manuais, planilhas e ferramentas desconectadas por um sistema web simples, eficaz e automatizado.',
       },
       {
-        question: 'Quanto tempo leva para ter o sistema no ar?',
+        question: 'Quanto tempo leva para implementar?',
         answer:
-          'Depende do escopo. Trabalhamos com entregas em ciclos curtos, então você começa a usar as primeiras funcionalidades antes do projeto completo ficar pronto.',
+          'Cada projeto tem suas particularidades. Trabalhamos com entregas em ciclos curtos, você começa a usar as primeiras funcionalidades antes do projeto completo ficar pronto.',
       },
       {
         question: 'Posso começar pequeno e crescer depois?',
@@ -299,13 +298,11 @@ export const content: Content = {
   contact: {
     eyebrow: 'Vamos conversar',
     title: 'Pronto para simplificar o seu negócio?',
-    text: 'Conte um pouco sobre o seu desafio e a gente volta com um caminho claro para resolvê-lo.',
+    text: 'Conte um pouco sobre o seu desafio. Um especialista analisará sua necessidade e entrará em contato com uma solução personalizada para o seu negócio.',
     info: [
-      { icon: '✉', text: 'hello@conft.com' },
-      { icon: '☎', text: '+1 234 567 4060' },
-      { icon: '🌐', text: 'conft.com' },
+      { icon: '✉', text: 'conft.cac@gmail.com', kind: 'email' },
+      { icon: '☎', text: '+55 45 9948-2083', kind: 'whatsapp', whatsappNumber: '554599482083' },
     ],
-    note: 'Dados de contato de exemplo — ajuste para os oficiais.',
     emailTo: 'hello@conft.com',
     emailSubjectPrefix: 'Contato pelo site — ',
     emailBody: { name: 'Nome', email: 'E-mail', company: 'Empresa', empty: '-' },
@@ -316,14 +313,17 @@ export const content: Content = {
       message: { label: 'Como podemos ajudar?', placeholder: 'Descreva o processo que você quer melhorar' },
       submit: 'Enviar mensagem',
       sending: 'Enviando…',
-      success: 'Pronto! Abrindo seu aplicativo de e-mail para finalizar o envio.',
-      error: 'Não foi possível abrir o e-mail. Tente novamente ou escreva direto para o endereço ao lado.',
+      success: 'Mensagem enviada! Em breve entraremos em contato.',
+      error: 'Não foi possível enviar. Tente novamente ou escreva direto para o endereço ao lado.',
       errors: {
         name: 'Informe seu nome.',
         email: 'Informe um e-mail válido, como voce@empresa.com.',
         message: 'Conte um pouco sobre o que você precisa (mínimo de 10 caracteres).',
+        tooLong: 'Texto acima do limite de caracteres.',
+        unsafe: 'Remova código ou tags HTML do texto.',
       },
     },
+    note: ""
   },
 
   footer: {

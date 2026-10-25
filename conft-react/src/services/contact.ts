@@ -7,21 +7,12 @@ export interface ContactValues {
   message: string;
 }
 
-const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
-
-/**
- * Hoje o envio abre o aplicativo de e-mail do usuário (mailto).
- * Para enviar por API, troque o corpo desta função por um fetch e mantenha a assinatura.
- */
-export async function sendContact(values: ContactValues, cfg: Content['contact']): Promise<void> {
-  await wait(800); // dá tempo de o estado de carregamento aparecer
-
-  if (!cfg.emailTo) throw new Error('Destinatário não configurado');
-
-  const subject = encodeURIComponent(`${cfg.emailSubjectPrefix}${values.name}`);
-  const { emailBody: b } = cfg;
-  const body = encodeURIComponent(
-    `${b.name}: ${values.name}\n${b.email}: ${values.email}\n${b.company}: ${values.company?.trim() || b.empty}\n\n${values.message}`,
-  );
-  window.location.href = `mailto:${cfg.emailTo}?subject=${subject}&body=${body}`;
+/** Envia o formulário para a função serverless /api/contact (Vercel), que dispara o e-mail. */
+export async function sendContact(values: ContactValues, _cfg: Content['contact']): Promise<void> {
+  const res = await fetch('/api/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(values),
+  });
+  if (!res.ok) throw new Error(`Falha no envio (${res.status})`);
 }

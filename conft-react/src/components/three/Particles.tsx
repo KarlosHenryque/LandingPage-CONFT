@@ -62,7 +62,7 @@ function Layer({ count, factor, z, size, interactive, animate, phase }: LayerPro
       // estica as estrelas no sentido vertical em rolagens rápidas
       g.scale.y = THREE.MathUtils.damp(g.scale.y, 1 + warp * factor * 2, 8, dt);
       g.rotation.z = THREE.MathUtils.damp(g.rotation.z, scrollState.y * 0.00012 * (factor + 0.3), 4, dt);
-      m.opacity = Math.min(1, 0.45 + Math.sin(t * (0.6 + factor) + phase) * 0.25 + warp * 0.4);
+      m.opacity = Math.min(1, 0.75 + Math.sin(t * (0.6 + factor) + phase) * 0.2 + warp * 0.4);
     }
   });
 
@@ -78,7 +78,7 @@ function Layer({ count, factor, z, size, interactive, animate, phase }: LayerPro
           size={size * dpr}
           sizeAttenuation={false}
           transparent
-          opacity={0.6}
+          opacity={0.85}
           depthWrite={false}
           toneMapped={false}
         />
@@ -99,7 +99,7 @@ export function Particles({ count, interactive, animate }: ParticlesProps) {
           count={per}
           factor={factor}
           z={-2 + i * 0.9}
-          size={1 + i * 0.45}
+          size={1 + i * 0.4}
           interactive={interactive}
           animate={animate}
           phase={i * 2.1}

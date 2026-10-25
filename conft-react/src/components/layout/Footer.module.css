@@ -2,7 +2,7 @@
   margin: 0 14px 14px;
   border-radius: 28px;
   background: var(--grafite);
-  padding: 3rem clamp(1.5rem, 5vw, 4rem) 1.5rem;
+  padding: 1.5rem clamp(1.5rem, 5vw, 4rem) 1.5rem;
   overflow: hidden;
   color: rgba(226, 232, 240, 0.7);
 }
@@ -71,15 +71,7 @@
   color: transparent;
 }
 
-.bottom {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding-top: 1.2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
+.copy {
   font-size: 0.76rem;
   color: rgba(226, 232, 240, 0.5);
 }
@@ -89,7 +81,7 @@
     margin: 0 8px 8px;
     border-radius: 22px;
   }
-  .bottom {
+  .top {
     flex-direction: column;
     text-align: center;
   }

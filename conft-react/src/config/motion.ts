@@ -46,13 +46,17 @@ export const motionConfig = {
 
   /** Globo 3D */
   globe: {
-    rings: 9,
+    rings: 9, // quantidade de órbitas, espaçadas por igual
+    ringSquash: 0.82, // achatamento de todas as órbitas (1 = círculo)
+    ringSpin: 0.05, // rad/s, giro de cada elipse no próprio plano
+    cageSpin: 0.05, // rad/s, giro do conjunto em Y
+    electronSpeed: 0.28, // rad/s
     idleSpeed: 1, // multiplicador da rotação lenta
     boostOnMove: 2.2, // aceleração máxima ao mover o mouse
     tiltX: 0.22, // rad, inclinação vertical máxima
     tiltY: 0.38, // rad, inclinação horizontal máxima
     damping: 2.6, // maior = segue mais rápido
-    bloom: { intensity: 0.7, threshold: 0.12, smoothing: 0.4 },
+    bloom: { intensity: 0.22, threshold: 0.35, smoothing: 0.4 },
     dpr: [1, 2] as [number, number],
   },
 

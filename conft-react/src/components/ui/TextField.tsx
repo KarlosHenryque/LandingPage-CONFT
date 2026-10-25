@@ -14,6 +14,7 @@ interface TextFieldProps {
   multiline?: boolean;
   rows?: number;
   autoComplete?: string;
+  maxLength?: number;
 }
 
 export function TextField({
@@ -26,6 +27,7 @@ export function TextField({
   multiline,
   rows = 4,
   autoComplete,
+  maxLength,
 }: TextFieldProps) {
   const id = useId();
   const errorId = `${id}-error`;
@@ -33,6 +35,7 @@ export function TextField({
     id,
     placeholder,
     autoComplete,
+    maxLength,
     'aria-invalid': error ? true : undefined,
     'aria-describedby': error ? errorId : undefined,
     className: `${styles.input} ${error ? styles.invalid : ''} ${valid && !error ? styles.valid : ''}`,

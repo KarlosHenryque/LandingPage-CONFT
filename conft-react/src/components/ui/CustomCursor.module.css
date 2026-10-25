@@ -1,5 +1,4 @@
-.dot,
-.ring {
+.dot {
   position: fixed;
   top: 0;
   left: 0;
@@ -7,10 +6,8 @@
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.25s;
-  mix-blend-mode: difference;
 }
-.dot[data-visible='true'],
-.ring[data-visible='true'] {
+.dot[data-visible='true'] {
   opacity: 1;
 }
 
@@ -21,46 +18,10 @@
   height: var(--dot);
   margin: calc(var(--dot) / -2) 0 0 calc(var(--dot) / -2);
   border-radius: 50%;
+  background: var(--azul);
+  transition: background 0.2s;
+}
+/* fundo escuro/azul → ponto branco; fundo claro → ponto azul */
+.dot[data-tone='light']::before {
   background: #fff;
-}
-
-.ringInner {
-  display: grid;
-  place-items: center;
-  width: var(--ring);
-  height: var(--ring);
-  margin: calc(var(--ring) / -2) 0 0 calc(var(--ring) / -2);
-  border-radius: 50%;
-  border: 1.5px solid #fff;
-  transition: width 0.3s var(--ease), height 0.3s var(--ease), margin 0.3s var(--ease), background 0.3s,
-    border-color 0.3s, transform 0.15s;
-}
-
-.ring[data-state='hover'] .ringInner {
-  width: var(--ring-hover);
-  height: var(--ring-hover);
-  margin: calc(var(--ring-hover) / -2) 0 0 calc(var(--ring-hover) / -2);
-  background: rgba(255, 255, 255, 0.18);
-}
-
-/* Com texto: sai do blend para mostrar o gradiente da marca */
-.ring[data-state='label'] {
-  mix-blend-mode: normal;
-}
-.ring[data-state='label'] .ringInner {
-  width: var(--ring-label);
-  height: var(--ring-label);
-  margin: calc(var(--ring-label) / -2) 0 0 calc(var(--ring-label) / -2);
-  background: var(--grad);
-  border-color: transparent;
-}
-.label {
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
-}
-
-.ring[data-pressed='true'] .ringInner {
-  transform: scale(0.82);
 }
