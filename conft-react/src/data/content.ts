@@ -300,10 +300,7 @@ export const content: Content = {
     eyebrow: 'Vamos conversar',
     title: 'Pronto para simplificar o seu negócio?',
     text: 'Conte um pouco sobre o seu desafio. Um especialista analisará sua necessidade e entrará em contato com uma solução personalizada para o seu negócio.',
-    info: [
-      { icon: '✉', text: 'conft.cac@gmail.com', kind: 'email' },
-      { icon: '☎', text: '+55 45 9948-2083', kind: 'whatsapp', whatsappNumber: '554599482083' },
-    ],
+    info: [{ icon: '', text: '+55 45 9948-2083', kind: 'whatsapp', whatsappNumber: '554599482083' }],
     emailTo: 'hello@conft.com',
     emailSubjectPrefix: 'Contato pelo site — ',
     emailBody: { name: 'Nome', email: 'E-mail', company: 'Empresa', empty: '-' },

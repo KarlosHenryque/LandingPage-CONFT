@@ -30,7 +30,7 @@ function makeSchema(errors: Content['contact']['form']['errors']) {
       .pipe(z.string().max(LIMITS.email, errors.email).refine(isEmail, errors.email)),
     company: text(LIMITS.company).optional(),
     message: text(LIMITS.message).pipe(z.string().min(10, errors.message)),
-    website: z.string().optional(), // honeypot
+    website: z.string().optional(), 
   });
 }
 type FormValues = z.infer<ReturnType<typeof makeSchema>>;
@@ -48,7 +48,7 @@ export function Contact() {
     formState: { errors, touchedFields, dirtyFields },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    mode: 'onTouched', // valida ao sair do campo e, depois disso, a cada tecla
+    mode: 'onTouched',
     defaultValues: { name: '', email: '', company: '', message: '', website: '' },
   });
 
@@ -79,21 +79,32 @@ export function Contact() {
           <Eyebrow dark>{contact.eyebrow}</Eyebrow>
           <h2 id="contato-title">{contact.title}</h2>
           <p>{contact.text}</p>
-          <ul className={styles.info}>
-            {contact.info.map((item) => (
-              <li key={item.text}>
-                {item.kind === 'whatsapp' ? (
-                  <a href={`https://wa.me/${item.whatsappNumber}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`} target="_blank" rel="noopener noreferrer">
-                    <span aria-hidden="true">{item.icon}</span> {item.text}
-                  </a>
-                ) : (
-                  <a href="#contato" onClick={focusName}>
-                    <span aria-hidden="true">{item.icon}</span> {item.text}
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
+          {contact.info.length > 0 && (
+            <ul className={styles.info}>
+              {contact.info.map((item) => (
+                <li key={item.text}>
+                  {item.kind === 'whatsapp' ? (
+                    <a
+                      href={`https://wa.me/${item.whatsappNumber}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.whatsapp}
+                      aria-label={`Falar via WhatsApp: ${item.text}`}
+                    >
+                      <span className={styles.waLabel}>
+                        Fale agora via <strong>WhatsApp</strong>
+                      </span>
+
+                    </a>
+                  ) : (
+                    <a href="#contato" onClick={focusName}>
+                      <span aria-hidden="true">{item.icon}</span> {item.text}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
           <small className={styles.note}>{contact.note}</small>
         </Reveal>
 
@@ -136,7 +147,6 @@ export function Contact() {
               valid={valid('message')}
             />
 
-            {/* honeypot: invisível para pessoas, bots costumam preencher */}
             <input
               type="text"
               tabIndex={-1}
