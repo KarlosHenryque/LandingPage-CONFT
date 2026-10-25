@@ -114,6 +114,10 @@ export async function POST(request: Request) {
     }),
   });
 
-  if (!res.ok) return json({ error: 'Falha ao enviar' }, 502);
+  if (!res.ok) {
+    // só vai para os logs da Vercel (nunca para o cliente); o corpo do erro do Resend não contém a chave
+    console.error('Resend recusou o envio', res.status, (await res.text().catch(() => '')).slice(0, 500));
+    return json({ error: 'Falha ao enviar' }, 502);
+  }
   return json({ ok: true });
 }
