@@ -262,6 +262,7 @@ export const content: Content = {
       { value: 100, suffix: '%', label: 'sob medida para sua operação' },
       { value: 24, suffix: '/7', label: 'acesso de qualquer lugar, pelo navegador' },
     ],
+    note: '',
   },
 
   faq: {
