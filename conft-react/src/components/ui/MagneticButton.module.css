@@ -1,0 +1,9 @@
+.plain {
+  display: inline-flex;
+}
+/* Área de atração um pouco maior que o botão, sem mudar o layout */
+.zone {
+  display: inline-flex;
+  padding: 14px;
+  margin: -14px;
+}

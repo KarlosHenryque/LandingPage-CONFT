@@ -1,0 +1,96 @@
+.footer {
+  margin: 0 14px 14px;
+  border-radius: 28px;
+  background: var(--grafite);
+  padding: 3rem clamp(1.5rem, 5vw, 4rem) 1.5rem;
+  overflow: hidden;
+  color: rgba(226, 232, 240, 0.7);
+}
+
+.top {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.top p b {
+  color: var(--roxo-claro);
+  font-weight: 600;
+}
+.top nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-size: 0.86rem;
+}
+.top nav a {
+  transition: color 0.2s;
+}
+.top nav a:hover {
+  color: #fff;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.mark {
+  width: 40px;
+  height: 35px;
+}
+.word {
+  font-weight: 800;
+  font-size: 1.45rem;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+/* Wordmark gigante: degradê base + brilho local que acompanha o cursor */
+.giant {
+  margin: 2.5rem 0 1.5rem;
+  text-align: center;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  font-size: clamp(5rem, 24vw, 20rem);
+  user-select: none;
+  background: radial-gradient(
+      var(--gr, 280px) circle at var(--gx, 50%) var(--gy, 50%),
+      rgba(167, 139, 250, var(--go, 0)),
+      rgba(96, 165, 250, calc(var(--go, 0) * 0.5)) 45%,
+      transparent 75%
+    ),
+    linear-gradient(180deg, rgba(96, 165, 250, 0.55), rgba(122, 37, 235, 0.08));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.bottom {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.76rem;
+  color: rgba(226, 232, 240, 0.5);
+}
+
+@media (max-width: 620px) {
+  .footer {
+    margin: 0 8px 8px;
+    border-radius: 22px;
+  }
+  .bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+}

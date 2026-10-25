@@ -1,0 +1,25 @@
+.tilt {
+  position: relative;
+  height: 100%;
+  will-change: transform;
+}
+
+/* spotlight (azul, mais largo) + glare (branco, mais fechado) seguindo o cursor */
+.fx {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--o, 0);
+  transition: opacity 0.3s var(--ease);
+  background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(96, 165, 250, var(--spot, 0.16)),
+      transparent 60%
+    ),
+    radial-gradient(
+      220px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, var(--glare, 0.16)),
+      transparent 70%
+    );
+}

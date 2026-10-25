@@ -1,0 +1,112 @@
+.mock {
+  padding: 0.9rem;
+  border: 1px solid var(--borda);
+  border-radius: 16px;
+  background: var(--gelo);
+  box-shadow: 0 18px 40px -26px rgba(15, 23, 42, 0.5);
+}
+.bar {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 0.8rem;
+}
+.bar i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e1;
+}
+.bar i:first-child {
+  background: var(--roxo-claro);
+}
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.kpis div {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  background: #fff;
+}
+.kpis small {
+  display: block;
+  font-size: 0.6rem;
+  color: #64748b;
+}
+.kpis b {
+  font-size: 0.95rem;
+}
+.chart {
+  height: 96px;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  background: #fff;
+}
+.chart span {
+  flex: 1;
+  border-radius: 5px 5px 2px 2px;
+  background: linear-gradient(180deg, var(--azul-claro), var(--azul));
+}
+.chart .hi {
+  background: linear-gradient(180deg, var(--roxo-claro), var(--roxo));
+}
+
+.checks {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+.checks li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  background: var(--gelo);
+  font-size: 0.82rem;
+}
+.box {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #cbd5e1;
+  border-radius: 5px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.on {
+  background: var(--grad);
+  border-color: transparent;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+.doneText {
+  color: var(--texto-suave);
+  transition: color 0.3s;
+}
+
+.spark {
+  height: 70px;
+  margin-top: 1.2rem;
+  padding: 0.5rem;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  background: var(--gelo);
+}
+.spark svg {
+  width: 100%;
+  height: 100%;
+}
+.spark polyline {
+  fill: none;
+  stroke: var(--roxo);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

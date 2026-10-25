@@ -1,0 +1,156 @@
+.about {
+  position: relative;
+  padding: clamp(5rem, 12vw, 9rem) 1.5rem;
+}
+
+.text {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.logo3d {
+  position: relative;
+  width: min(100%, 420px);
+  height: 300px;
+  margin: 0 auto 1.2rem;
+}
+.logoFallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+}
+
+.statement {
+  font-size: clamp(1.25rem, 2.6vw, 1.8rem);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+.statement em {
+  font-style: normal;
+  font-weight: 700;
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.signature {
+  margin-top: 2rem;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+.signature b {
+  color: var(--roxo);
+}
+
+.scatter {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.tile {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px -20px rgba(15, 23, 42, 0.35);
+  animation: float 9s ease-in-out infinite;
+}
+.tile svg {
+  width: 55%;
+  height: 55%;
+}
+.tile span {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #fff;
+}
+.a {
+  top: 10%;
+  left: 6%;
+  width: 92px;
+  height: 92px;
+  background: var(--grafite);
+  rotate: -6deg;
+}
+.b {
+  top: 18%;
+  right: 8%;
+  width: 110px;
+  height: 76px;
+  background: var(--grad);
+  rotate: 5deg;
+  animation-delay: -2s;
+}
+.c {
+  top: 52%;
+  left: 3%;
+  width: 84px;
+  height: 84px;
+  background: var(--azul);
+  rotate: 4deg;
+  animation-delay: -4s;
+}
+.d {
+  bottom: 12%;
+  right: 5%;
+  width: 96px;
+  height: 96px;
+  background: var(--roxo-claro);
+  rotate: -5deg;
+  animation-delay: -1s;
+}
+.e {
+  bottom: 8%;
+  left: 15%;
+  width: 64px;
+  height: 64px;
+  background: var(--roxo);
+  animation-delay: -5s;
+}
+.f {
+  top: 6%;
+  right: 28%;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--azul-claro);
+  animation-delay: -3s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 980px) {
+  .b,
+  .f {
+    display: none;
+  }
+}
+@media (max-width: 620px) {
+  .tile {
+    opacity: 0.55;
+  }
+  .a {
+    left: -10px;
+  }
+  .c {
+    left: -18px;
+  }
+  .d {
+    right: -14px;
+  }
+}

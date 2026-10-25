@@ -1,0 +1,38 @@
+.menu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+}
+.menu a {
+  padding: 0.8rem 0.6rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.82);
+  border-radius: 10px;
+  transition: color 0.2s, background 0.2s;
+}
+.menu a:hover,
+.menu a.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+.menu a:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+.menu a.cta {
+  margin-top: 0.4rem;
+  text-align: center;
+  background: var(--grad);
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 600;
+}

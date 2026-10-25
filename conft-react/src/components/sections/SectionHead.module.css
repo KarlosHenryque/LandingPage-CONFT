@@ -1,0 +1,23 @@
+.head {
+  max-width: 720px;
+  margin: 0 auto 3.2rem;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+.head h2 {
+  margin-bottom: 1rem;
+  font-size: clamp(1.9rem, 4.2vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+.head p {
+  color: var(--texto-suave);
+  font-size: 1.02rem;
+}
+.dark h2 {
+  color: #fff;
+}
+.dark p {
+  color: rgba(226, 232, 240, 0.7);
+}

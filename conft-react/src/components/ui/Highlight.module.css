@@ -1,0 +1,12 @@
+.grad {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.light {
+  background: linear-gradient(135deg, var(--azul-claro), var(--roxo-claro));
+  -webkit-background-clip: text;
+  background-clip: text;
+}

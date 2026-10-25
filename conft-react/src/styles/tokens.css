@@ -1,0 +1,19 @@
+:root {
+  --azul: #2563eb;
+  --roxo: #7a25eb;
+  --azul-claro: #60a5fa;
+  --roxo-claro: #a78bfa;
+  --grafite: #0f172a;
+  --gelo: #f8fafc;
+
+  --grafite-2: #172036;
+  --texto: #0f172a;
+  --texto-suave: #475569;
+  --borda: #e2e8f0;
+  --grad: linear-gradient(135deg, var(--azul), var(--roxo));
+
+  --radius: 22px;
+  --max: 1180px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --header-h: 90px;
+}

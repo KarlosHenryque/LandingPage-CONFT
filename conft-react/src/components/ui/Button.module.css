@@ -1,0 +1,80 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.95rem 1.7rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.25s, color 0.25s,
+    border-color 0.25s, opacity 0.25s;
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 0.08s;
+}
+.btn:disabled,
+.loading {
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.sm {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.82rem;
+}
+.block {
+  width: 100%;
+}
+
+.primary {
+  background: var(--grad);
+  color: #fff;
+  box-shadow: 0 10px 30px -10px rgba(122, 37, 235, 0.7);
+}
+.primary:hover {
+  box-shadow: 0 14px 36px -8px rgba(122, 37, 235, 0.85);
+}
+.white {
+  background: #fff;
+  color: var(--grafite);
+}
+.white:hover {
+  box-shadow: 0 12px 30px -10px rgba(96, 165, 250, 0.8);
+}
+.outline {
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+}
+.outline:hover {
+  border-color: var(--azul-claro);
+  background: rgba(96, 165, 250, 0.12);
+}
+.ghost {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+.ghost:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
